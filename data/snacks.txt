@@ -1,0 +1,4 @@
+Popcorn,5.0
+Soda,2.5
+Candy,3.0
+Ice Cream,5.0
