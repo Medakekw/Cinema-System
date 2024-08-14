@@ -11,6 +11,18 @@ public class Movie {
         this.playTime = playTime;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setPlayTime(String playTime) {
+        this.playTime = playTime;
+    }
+
     public String getTitle() {
         return title;
     }

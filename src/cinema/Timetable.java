@@ -28,6 +28,16 @@ public class Timetable {
         }
     }
 
+    public Timetable(List<Movie> movies) {
+        this.movies = movies;
+    }
+
+    public void setMovies(List<Movie> movies) {
+        this.movies = movies;
+    }
+
+
+
     public List<Movie> getMovies() {
         return movies;
     }
@@ -38,4 +48,9 @@ public class Timetable {
         }
         return movies.get(movieNumber - 1).getPrice();
     }
+    @Override
+    public String toString() {
+        return "Timetable{" + "movies =" + movies + '}';
+    }
+
 }

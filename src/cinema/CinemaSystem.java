@@ -1,9 +1,10 @@
+
 package cinema;
 
 import cinema.utils.FileManager;
 import cinema.utils.Greetable;
-import exceptions.InvalidEmailException;
 import exceptions.InvalidChoiceException;
+import exceptions.InvalidEmailException;
 import exceptions.MovieNotFoundException;
 import exceptions.UserNotFoundException;
 
@@ -15,17 +16,19 @@ public class CinemaSystem implements Greetable {
     private List<Snack> snacks;
     private Customer customer;
     private boolean loggedIn = false;
+    private UI ui;
 
     public CinemaSystem() {
         this.timetable = new Timetable();
         this.snacks = FileManager.loadSnacks("data/snacks.txt");
+        this.ui = new UI(this);
     }
 
     public void start() {
         greet();
         try {
-            handleUserAuthentication();
-            showMainMenu();
+            ui.handleUserAuthentication();
+            ui.showMainMenu();
         } catch (Exception e) {
             System.out.println("An unexpected error occurred: " + e.getMessage());
         }
@@ -36,42 +39,7 @@ public class CinemaSystem implements Greetable {
         System.out.println("Welcome to the Cinema System!");
     }
 
-    private void handleUserAuthentication() {
-        Scanner scanner = new Scanner(System.in);
-        while (true) {
-            System.out.println("1. Login");
-            System.out.println("2. Register(10% discount on purchases for users with an account!)");
-            System.out.println("3. Continue without an account");
-            System.out.println("4. Exit");
-            try {
-                int choice = scanner.nextInt();
-                scanner.nextLine();  // consume newline
-
-                switch (choice) {
-                    case 1:
-                        login();
-                        return;
-                    case 2:
-                        register();
-                        login();
-                        return;
-                    case 3:
-                        return;
-                    case 4:
-                        System.out.println("Goodbye!");
-                        System.exit(0);
-                    default:
-                        throw new InvalidChoiceException("Invalid choice. Please select a valid option.");
-                }
-            } catch (InvalidChoiceException e) {
-                System.out.println(e.getMessage());
-            } catch (Exception e) {
-                System.out.println("An unexpected error occurred: " + e.getMessage());
-            }
-        }
-    }
-
-    private void login() throws InvalidEmailException, UserNotFoundException {
+    public void login() throws InvalidEmailException, UserNotFoundException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter your email:");
         String email = scanner.nextLine();
@@ -88,7 +56,7 @@ public class CinemaSystem implements Greetable {
         }
     }
 
-    private void register() throws InvalidEmailException {
+    public void register() throws InvalidEmailException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter your email:");
         String email = scanner.nextLine();
@@ -106,46 +74,7 @@ public class CinemaSystem implements Greetable {
         }
     }
 
-    private void showMainMenu() {
-        Scanner scanner = new Scanner(System.in);
-        while (true) {
-            System.out.println("1. See Timetable");
-            System.out.println("2. Buy Ticket");
-            System.out.println("3. View My Info");
-            System.out.println("4. Exit");
-            try {
-                int choice = scanner.nextInt();
-                scanner.nextLine();  // consume newline
-
-                switch (choice) {
-                    case 1:
-                        showTimetable();
-                        break;
-                    case 2:
-                        buyTicket();
-                        break;
-                    case 3:
-                        if (customer != null) {
-                            customer.displayUserInfo();
-                        } else {
-                            System.out.println("No customer info available.");
-                        }
-                        break;
-                    case 4:
-                        System.out.println("Goodbye!");
-                        return;
-                    default:
-                        throw new InvalidChoiceException("Invalid choice. Please select a valid option.");
-                }
-            } catch (InvalidChoiceException e) {
-                System.out.println(e.getMessage());
-            } catch (Exception e) {
-                System.out.println("An unexpected error occurred: " + e.getMessage());
-            }
-        }
-    }
-
-    private void showTimetable() {
+    public void showTimetable() {
         timetable.loadTimetable("data/timetable.txt");
         timetable.displayTimetable();
 
@@ -153,7 +82,7 @@ public class CinemaSystem implements Greetable {
         System.out.println("Enter movie number to see more details, or 0 to return to main menu:");
         try {
             int movieNumber = scanner.nextInt();
-            scanner.nextLine();  // consume newline
+            scanner.nextLine();
 
             if (movieNumber == 0) {
                 return;
@@ -168,7 +97,7 @@ public class CinemaSystem implements Greetable {
         }
     }
 
-    private void buyTicket() {
+    public void buyTicket() {
         timetable.loadTimetable("data/timetable.txt");
         timetable.displayTimetable();
 
@@ -176,7 +105,7 @@ public class CinemaSystem implements Greetable {
         System.out.println("Enter movie number to buy a ticket:");
         try {
             int movieNumber = scanner.nextInt();
-            scanner.nextLine();  // consume newline
+            scanner.nextLine();
 
             if (movieNumber <= 0 || movieNumber > timetable.getMovies().size()) {
                 throw new InvalidChoiceException("Invalid movie number. Please select a valid movie number.");
@@ -207,6 +136,14 @@ public class CinemaSystem implements Greetable {
         }
     }
 
+    public void displayCustomerInfo() {
+        if (customer != null) {
+            customer.displayUserInfo();
+        } else {
+            System.out.println("No customer info available.");
+        }
+    }
+
     private double selectSnacks() {
         Scanner scanner = new Scanner(System.in);
         double snackCost = 0.0;
@@ -219,7 +156,7 @@ public class CinemaSystem implements Greetable {
         while (true) {
             try {
                 int snackNumber = scanner.nextInt();
-                scanner.nextLine();  // consume newline
+                scanner.nextLine();
 
                 if (snackNumber == 0) {
                     break;

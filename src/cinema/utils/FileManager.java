@@ -18,7 +18,7 @@ public class FileManager {
 
                 if (parts.length < 3) {
                     System.out.println("Skipping invalid line: " + line);
-                    continue;  // Skip lines that don't have enough parts
+                    continue;
                 }
 
                 String title = parts[0];
@@ -29,7 +29,7 @@ public class FileManager {
                     price = Double.parseDouble(parts[1]);
                 } catch (NumberFormatException e) {
                     System.out.println("Invalid price format in line: " + line);
-                    continue;  // Skip lines with invalid price format
+                    continue;
                 }
 
                 Movie movie = new Movie(title, price, playTime);
