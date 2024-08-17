@@ -1,4 +1,3 @@
-
 package cinema;
 
 import exceptions.InvalidChoiceException;
@@ -8,22 +7,44 @@ import exceptions.UserNotFoundException;
 
 import java.util.Scanner;
 
+/**
+ * The UI class represents the user interface for the Cinema System.
+ * It handles user interactions, including authentication, main menu navigation, and executing cinema-related actions.
+ */
 public class UI {
     private CinemaSystem cinemaSystem;
 
+    /**
+     * Constructs a new UI object associated with a specific CinemaSystem.
+     *
+     * @param cinemaSystem The CinemaSystem instance that this UI interacts with.
+     */
     public UI(CinemaSystem cinemaSystem) {
         this.cinemaSystem = cinemaSystem;
     }
 
-
+    /**
+     * Returns the CinemaSystem instance associated with this UI.
+     *
+     * @return The CinemaSystem instance.
+     */
     public CinemaSystem getCinemaSystem() {
         return cinemaSystem;
     }
 
+    /**
+     * Sets the CinemaSystem instance associated with this UI.
+     *
+     * @param cinemaSystem The CinemaSystem instance to set.
+     */
     public void setCinemaSystem(CinemaSystem cinemaSystem) {
         this.cinemaSystem = cinemaSystem;
     }
 
+    /**
+     * Handles user authentication by presenting a menu with options to login, register, continue without an account, or exit.
+     * If the user chooses to login or register, the respective methods from the CinemaSystem are called.
+     */
     public void handleUserAuthentication() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -59,6 +80,10 @@ public class UI {
         }
     }
 
+    /**
+     * Displays the main menu of the cinema system, providing options to see the timetable, buy a ticket, view customer information, or exit.
+     * Executes the appropriate CinemaSystem methods based on the user's selection.
+     */
     public void showMainMenu() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -93,6 +118,12 @@ public class UI {
             }
         }
     }
+
+    /**
+     * Returns a string representation of the UI object, including its associated CinemaSystem.
+     *
+     * @return A string representation of the UI.
+     */
     @Override
     public String toString() {
         return "UI(cinemaSystem=" + cinemaSystem + ", UI=" + this + ")";

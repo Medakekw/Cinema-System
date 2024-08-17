@@ -1,4 +1,3 @@
-
 package cinema;
 
 import cinema.utils.FileManager;
@@ -11,6 +10,10 @@ import exceptions.UserNotFoundException;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * The CinemaSystem class represents a system that manages various operations related to a cinema,
+ * including handling user authentication, managing the timetable, selling tickets, and offering snacks.
+ */
 public class CinemaSystem implements Greetable {
     private Timetable timetable;
     private List<Snack> snacks;
@@ -18,12 +21,19 @@ public class CinemaSystem implements Greetable {
     private boolean loggedIn = false;
     private UI ui;
 
+    /**
+     * Constructs a new CinemaSystem object and initializes the timetable, snacks, and UI components.
+     */
     public CinemaSystem() {
         this.timetable = new Timetable();
         this.snacks = FileManager.loadSnacks("data/snacks.txt");
         this.ui = new UI(this);
     }
 
+    /**
+     * Starts the CinemaSystem, including greeting the user, handling user authentication,
+     * and displaying the main menu.
+     */
     public void start() {
         greet();
         try {
@@ -34,11 +44,21 @@ public class CinemaSystem implements Greetable {
         }
     }
 
+    /**
+     * Greets the user with a welcome message.
+     */
     @Override
     public void greet() {
         System.out.println("Welcome to the Cinema System!");
     }
 
+    /**
+     * Handles user login by asking for an email and password, and verifying the credentials.
+     * If the login is successful, the user is marked as logged in.
+     *
+     * @throws InvalidEmailException If the email format is invalid.
+     * @throws UserNotFoundException If the user is not found or the credentials are incorrect.
+     */
     public void login() throws InvalidEmailException, UserNotFoundException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter your email:");
@@ -56,6 +76,12 @@ public class CinemaSystem implements Greetable {
         }
     }
 
+    /**
+     * Handles user registration by asking for an email and password, and saving the credentials.
+     * After registration, the user is prompted to log in.
+     *
+     * @throws InvalidEmailException If the email format is invalid.
+     */
     public void register() throws InvalidEmailException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter your email:");
@@ -68,12 +94,21 @@ public class CinemaSystem implements Greetable {
         System.out.println("Registration successful! Please login.");
     }
 
+    /**
+     * Validates the format of the email.
+     *
+     * @param email The email address to validate.
+     * @throws InvalidEmailException If the email format is invalid.
+     */
     private void validateEmail(String email) throws InvalidEmailException {
         if (!email.contains("@") || !email.contains(".")) {
             throw new InvalidEmailException("Invalid email format. Please enter a valid email.");
         }
     }
 
+    /**
+     * Displays the movie timetable, allowing the user to view details of a selected movie.
+     */
     public void showTimetable() {
         timetable.loadTimetable("data/timetable.txt");
         timetable.displayTimetable();
@@ -97,6 +132,10 @@ public class CinemaSystem implements Greetable {
         }
     }
 
+    /**
+     * Allows the user to buy a ticket for a selected movie, with an optional snack purchase.
+     * Applies a discount if the user is logged in.
+     */
     public void buyTicket() {
         timetable.loadTimetable("data/timetable.txt");
         timetable.displayTimetable();
@@ -136,6 +175,10 @@ public class CinemaSystem implements Greetable {
         }
     }
 
+    /**
+     * Displays information about the logged-in customer.
+     * If no customer is logged in, a message indicating that no customer info is available is displayed.
+     */
     public void displayCustomerInfo() {
         if (customer != null) {
             customer.displayUserInfo();
@@ -144,6 +187,12 @@ public class CinemaSystem implements Greetable {
         }
     }
 
+    /**
+     * Allows the user to select snacks for purchase.
+     * The total cost of the selected snacks is calculated and returned.
+     *
+     * @return The total cost of the selected snacks.
+     */
     private double selectSnacks() {
         Scanner scanner = new Scanner(System.in);
         double snackCost = 0.0;
