@@ -2,73 +2,52 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import cinema.utils.FileManager;
+import exceptions.MovieNotFoundException;
 
-public class FileManagerTest {
+public class LoadMovieInfoTest {
 
     @Test
-    public void testLoadMovieInfoSuccessful() {
+    public void testLoadMovieInfoSuccessful() throws Exception {
         String testFilename = "test_movie.txt";
         String movieContent = "Title: Test Movie\nGenre: Action\n";
 
-
+        // Kreiranje test fajla sa informacijama o filmu
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(testFilename))) {
             writer.write(movieContent);
-        } catch (IOException e) {
-            fail("Setup failed: Could not create test file.");
         }
 
-        try {
-            String result = FileManager.loadMovieInfo(testFilename);
-            assertEquals(movieContent, result);
-        } catch (MovieNotFoundException e) {
-            fail("MovieNotFoundException should not be thrown for a valid file.");
-        } finally {
-            try {
-                Files.deleteIfExists(Paths.get(testFilename));
-            } catch (IOException e) {
-                System.out.println("Cleanup failed: Could not delete test file.");
-            }
-        }
+        // Testiranje
+        String result = FileManager.loadMovieInfo(testFilename);
+        assertEquals(movieContent, result);
+
+        // Ciscenje test fajla
+        Files.deleteIfExists(Paths.get(testFilename));
     }
 
     @Test(expected = MovieNotFoundException.class)
-    public void testLoadMovieInfoFileNotFound() throws MovieNotFoundException {
+    //Testiranje da metoda baca movienotfoundexception kada fajl nije nadjen
+    public void testLoadMovieInfoFileNotFound() throws Exception {
         String nonExistentFile = "nonexistent_movie.txt";
-
         FileManager.loadMovieInfo(nonExistentFile);
     }
 
     @Test
-    public void testLoadMovieInfoWithIOException() {
-        String testFilename = "test_movie.txt";
+    public void testLoadMovieInfoEmptyFile() throws Exception {
+        String testFilename = "empty_movie.txt";
 
+        // Kreiranje praznog test fajla
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(testFilename))) {
-            writer.write("Test data");
-        } catch (IOException e) {
-            fail("Setup failed: Could not create test file.");
+            writer.write("");
         }
 
-        try {
-            Files.setPosixFilePermissions(Paths.get(testFilename), java.util.Collections.emptySet());
-        } catch (IOException e) {
-            fail("Setup failed: Could not restrict file permissions.");
-        }
+        // Testiranje metode
+        String result = FileManager.loadMovieInfo(testFilename);
+        assertEquals("", result);
 
-        try {
-            String result = FileManager.loadMovieInfo(testFilename);
-            assertTrue(result.isEmpty());
-        } catch (MovieNotFoundException e) {
-            fail("MovieNotFoundException should not be thrown when an IOException occurs.");
-        } finally {
-            try {
-                Files.setPosixFilePermissions(Paths.get(testFilename), java.util.Set.of(java.nio.file.attribute.PosixFilePermission.OWNER_READ, java.nio.file.attribute.PosixFilePermission.OWNER_WRITE));
-                Files.deleteIfExists(Paths.get(testFilename));
-            } catch (IOException e) {
-                System.out.println("Cleanup failed: Could not restore permissions or delete test file.");
-            }
-        }
+        // Ciscenje test fajla
+        Files.deleteIfExists(Paths.get(testFilename));
     }
 }

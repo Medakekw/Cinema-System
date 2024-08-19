@@ -161,10 +161,11 @@ public class CinemaSystem implements Greetable {
 
             if (loggedIn) {
                 totalCost *= 0.9; // Apply 10% discount
+                System.out.println("Confirmation receipt sent to " + (customer != null ? customer.getEmail() : "your email"));
+
             }
 
             System.out.println("Total cost: $" + totalCost);
-            System.out.println("Confirmation receipt sent to " + (customer != null ? customer.getEmail() : "your email"));
             System.out.println("Ticket purchased successfully!");
         } catch (MovieNotFoundException e) {
             System.out.println(e.getMessage());
